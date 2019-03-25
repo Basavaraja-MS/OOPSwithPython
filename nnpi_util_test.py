@@ -33,11 +33,11 @@ class nnpi_util_test:
 		self.timeout = timeout
 		self.outfile = outfile
 		#Utility init
-		super(nnpi_util_base_test_class, self).__init__(*args, **kwargs)
+		super(self).__init__(self, utility, args, timeout, outputfile)
 
 	def __del__(self, *args, **kwargs):
 		#Utility del
-		super(nnpi_util_base_test_class, self).__init__(*args, **kwargs)
+		super(self).__init__(*args, **kwargs)
 
 	def execution(self, *args, **kwargs): #excution string
 		#Execution procedure
@@ -46,6 +46,25 @@ class nnpi_util_test:
 		#
 	#self.serialize()
 	comparison m_comparsion
+
+class SongSerializer:
+    def serialize(self, song, format):
+        if format == 'JSON':
+            song_info = {
+                'id': song.song_id,
+                'title': song.title,
+                'artist': song.artist
+            }
+            return json.dumps(song_info)
+        elif format == 'XML':
+            song_info = et.Element('song', attrib={'id': song.song_id})
+            title = et.SubElement(song_info, 'title')
+            title.text = song.title
+            artist = et.SubElement(song_info, 'artist')
+            artist.text = song.artist
+            return et.tostring(song_info, encoding='unicode')
+        else:
+            raise ValueError(format)
 
 #How to push the data to output file ??
 # pop up the commands 
